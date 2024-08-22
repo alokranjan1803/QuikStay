@@ -25,7 +25,7 @@ export default function PlacesFormPage() {
       return;
     }
     axios
-      .get(`hotel-mingle-api.vercel.app/places/` + id)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/places/` + id)
       .then((response) => {
         const { data } = response;
         setTitle(data.title);
@@ -72,7 +72,7 @@ export default function PlacesFormPage() {
     };
     if (id) {
       // update
-      await axios.put(`hotel-mingle-api.vercel.app/places`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/places`, {
         id,
         ...placeData,
       });
