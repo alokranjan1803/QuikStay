@@ -19,7 +19,7 @@ export default function ProfilePage(){
     }
 
     async function logout() {
-        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/logout`);
+        await axios.post(`hotel-mingle-api.vercel.app/logout`);
         setRedirect('/');
         setUser(null)
       }
@@ -28,7 +28,7 @@ export default function ProfilePage(){
         return 'Loading....';
     }
     if(ready && !user && !redirect){
-        return <Navigate to={`${import.meta.env.VITE_API_BASE_URL}/login`} />
+        return <Navigate to={`hotel-mingle-api.vercel.app/login`} />
     }
 
     if(redirect){
