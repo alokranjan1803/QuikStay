@@ -9,7 +9,7 @@ import BookingDates from "../BookingDates";
 export default function BookingsPage() {
   const [bookings,setBookings] = useState([]);
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/bookings`).then(response => {
+    axios.get("hotel-mingle-api.vercel.app/bookings").then(response => {
       setBookings(response.data);
     });
   }, []);
