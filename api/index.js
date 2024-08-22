@@ -40,6 +40,7 @@ app.use(
   cors({
     credentials: true,
     origin: "https://hotel-mingle.vercel.app",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 );
 
