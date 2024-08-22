@@ -42,10 +42,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-// app.use(cors({
-//     credentials:true,
-//     origin:'https://hotelbazaar.vercel.app/'
-// }))
+app.use(
+  cors({
+    credentials: true,
+    origin: "https://hotel-mingle.vercel.app/",
+  })
+);
 
 mongoose
   .connect(process.env.MONGO_URL)
