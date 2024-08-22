@@ -22,7 +22,7 @@ app.use(
   cors({
     credentials: true,
     origin: "https://hotel-mingle.vercel.app", // No trailing slash
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    methods: "GET,POST",
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
