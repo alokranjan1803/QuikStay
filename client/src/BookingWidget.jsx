@@ -25,13 +25,13 @@ export default function BookingWidget({place}) {
   }
 
   async function bookThisPlace() {
-    const response = await axios.post('/bookings', {
+    const response = await axios.post('hotel-mingle-api.vercel.app/bookings', {
       checkIn,checkOut,numberOfGuests,name,phone,
       place:place._id,
       price:numberOfNights * place.price,
     });
     const bookingId = response.data._id;
-    setRedirect(`/account/bookings/${bookingId}`);
+    setRedirect(`hotel-mingle-api.vercel.app/account/bookings/${bookingId}`);
   }
 
   if (redirect) {
