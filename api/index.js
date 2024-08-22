@@ -17,13 +17,7 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
-// Use CORS middleware
-app.use(
-  cors({
-    credentials: true,
-    origin: "http://localhost:5173",
-  })
-);
+
 
 app.get("/", async (req, res, next) => {
   try {
