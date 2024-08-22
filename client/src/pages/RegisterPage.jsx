@@ -11,7 +11,7 @@ export default function RegisterPage() {
     ev.preventDefault();
     
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, {
+      await axios.post(`https://hotel-mingle-api.vercel.app/register`, {
         name,
         email,
         password,
