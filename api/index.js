@@ -22,12 +22,9 @@ app.use(
   cors({
     credentials: true,
     origin: "https://hotel-mingle.vercel.app", // No trailing slash
-    methods: "GET,POST",
-    
+    methods: "GET,POST,PUT,DELETE", // Include all necessary methods
   })
 );
-
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -86,7 +83,7 @@ app.post("/api/login", async (req, res) => {
         {},
         (err, token) => {
           if (err) throw err;
-          res.cookie("token", token).json(userDoc);
+          res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'none' }).json(userDoc);
         }
       );
     } else {
@@ -98,7 +95,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 // Profile route
-app.get("/api/profile", cors(), (req, res) => {
+app.get("/api/profile", (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -112,7 +109,7 @@ app.get("/api/profile", cors(), (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
-  res.cookie("token", "").json(true);
+  res.cookie("token", "", { httpOnly: true, secure: true, sameSite: 'none' }).json(true);
 });
 
 app.post("/api/upload-by-link", async (req, res) => {
