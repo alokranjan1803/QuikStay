@@ -23,7 +23,7 @@ app.use(
     credentials: true,
     origin: "https://hotel-mingle.vercel.app", // No trailing slash
     methods: "GET,POST",
-    allowedHeaders: ["Content-Type", "Authorization"],
+    
   })
 );
 
