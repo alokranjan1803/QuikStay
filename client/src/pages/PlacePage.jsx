@@ -12,7 +12,7 @@ export default function PlacePage() {
     if (!id) {
       return;
     }
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/places/${id}`).then(response => {
+    axios.get(`hotel-mingle-api.vercel.app/places/${id}`).then(response => {
       setPlace(response.data);
     });
   }, [id]);
