@@ -10,7 +10,7 @@ export default function BookingPage() {
   const [booking,setBooking] = useState(null);
   useEffect(() => {
     if (id) {
-      axios.get('hotel-mingle-api.vercel.app/bookings').then(response => {
+      axios.get("hotel-mingle-api.vercel.app/bookings").then(response => {
         const foundBooking = response.data.find(({_id}) => _id === id);
         if (foundBooking) {
           setBooking(foundBooking);
