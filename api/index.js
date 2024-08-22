@@ -17,7 +17,20 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
-
+// Use CORS middleware
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: "http://localhost:5173",
+//   })
+// );
+app.use(
+  cors({
+    credentials: true,
+    origin: "https://hotel-mingle.vercel.app",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  })
+);
 
 app.get("/", async (req, res, next) => {
   try {
@@ -36,14 +49,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-// Use CORS middleware
-app.use(
-  cors({
-    credentials: true,
-    origin: "https://hotel-mingle.vercel.app", // No trailing slash
-    methods: "GET,POST,PUT,DELETE", // Include all necessary methods
-  })
-);
+
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -67,7 +73,7 @@ app.get("/api/test", (req, res) => {
   res.json("test passed");
 });
 
-// Register routes
+//Register routes
 app.post("/api/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -82,7 +88,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// Login Route
+//login Route
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
@@ -98,7 +104,7 @@ app.post("/api/login", async (req, res) => {
         {},
         (err, token) => {
           if (err) throw err;
-          res.cookie("token", token, { httpOnly: true, secure: true, sameSite: 'none' }).json(userDoc);
+          res.cookie("token", token).json(userDoc);
         }
       );
     } else {
@@ -109,9 +115,10 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Profile route
+//profile route
 app.get("/api/profile", (req, res) => {
   const { token } = req.cookies;
+
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
@@ -124,7 +131,7 @@ app.get("/api/profile", (req, res) => {
 });
 
 app.post("/api/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true, secure: true, sameSite: 'none' }).json(true);
+  res.cookie("token", "").json(true);
 });
 
 app.post("/api/upload-by-link", async (req, res) => {
@@ -274,6 +281,6 @@ app.get("/api/bookings", async (req, res) => {
   res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
 
-app.listen(PORT,  () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`connected at port ${PORT}`);
 });
