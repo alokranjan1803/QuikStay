@@ -1,0 +1,14 @@
+.extra-info-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.extra-info-list li {
+  margin-bottom: 10px;
+}
+
+.extra-info-list li::before {
+  content: "• ";
+  color: #4a90e2;
+  font-weight: bold;
+}
