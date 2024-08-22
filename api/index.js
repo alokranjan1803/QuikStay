@@ -17,32 +17,21 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
+// Use CORS middleware
+app.use(
+  cors({
+    credentials: true,
+    origin: "https://hotel-mingle.vercel.app", // No trailing slash
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-
-app.get("/", async (req, res, next) => {
-  try {
-    let html = fs.readFileSync(path.resolve(root, "index.html"), "utf-8");
-
-    // Transform HTML using Vite plugins.
-    html = await viteServer.transformIndexHtml(req.url, html);
-
-    res.send(html);
-  } catch (e) {
-    return next(e);
-  }
-});
+app.options("*", cors()); // Preflight requests handling
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
-
-app.use(
-  cors({
-    credentials: true,
-    origin: "https://hotel-mingle.vercel.app/",
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  })
-);
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -66,7 +55,7 @@ app.get("/api/test", (req, res) => {
   res.json("test passed");
 });
 
-//Register routes
+// Register routes
 app.post("/api/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -81,7 +70,7 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-//login Route
+// Login Route
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
@@ -108,10 +97,9 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-//profile route
-app.get("/api/profile", (req, res) => {
+// Profile route
+app.get("/api/profile", cors(), (req, res) => {
   const { token } = req.cookies;
-
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
