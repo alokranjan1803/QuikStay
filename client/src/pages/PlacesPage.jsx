@@ -8,7 +8,7 @@ export default function PlacesPage(){
     const {action} = useParams();
     const [places,setPlaces] = useState([]);
     useEffect(() => {
-        axios.get(`hotel-mingle-api.vercel.app/user-places`).then(({data}) => {
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}/user-places`).then(({data}) => {
         setPlaces(data);
         });
     }, []);
