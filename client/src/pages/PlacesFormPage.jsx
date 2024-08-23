@@ -80,7 +80,7 @@ export default function PlacesFormPage() {
     } else {
       // new place
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/places`,
+        `hotel-mingle-api.vercel.app/places`,
         placeData
       );
       setRedirect(true);

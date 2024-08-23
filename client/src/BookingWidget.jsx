@@ -31,7 +31,7 @@ export default function BookingWidget({place}) {
       price:numberOfNights * place.price,
     });
     const bookingId = response.data._id;
-    setRedirect(`/account/bookings/${bookingId}`);
+    setRedirect(`${import.meta.env.VITE_API_BASE_URL}/account/bookings/${bookingId}`);
   }
 
   if (redirect) {
