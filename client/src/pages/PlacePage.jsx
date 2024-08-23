@@ -12,11 +12,9 @@ export default function PlacePage() {
     if (!id) {
       return;
     }
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/places/${id}`)
-      .then((response) => {
-        setPlace(response.data);
-      });
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/${id}`).then((response) => {
+      setPlace(response.data);
+    });
   }, [id]);
 
   if (!place) return "";
