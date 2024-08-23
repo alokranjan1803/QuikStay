@@ -18,18 +18,11 @@ const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
 // Use CORS middleware
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: "http://localhost:5173",
-//   })
-// );
-
 app.use(
   cors({
     credentials: true,
-    origin: "https://hotel-mingle.vercel.app",
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: process.env.CLIENT_API,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 
@@ -69,6 +62,10 @@ function getUserDataFromReq(req) {
     });
   });
 }
+
+app.get("/register", (req, res) => {
+  res.json("Hello User, Welcome to Hotel Booking");
+});
 
 app.get("/test", (req, res) => {
   res.json("test passed");
