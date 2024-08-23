@@ -18,17 +18,10 @@ const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
 // Use CORS middleware
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: "http://localhost:5173",
-//   })
-// );
 app.use(
   cors({
     credentials: true,
-    origin: "https://hotel-mingle.vercel.app",
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: "http://localhost:5173",
   })
 );
 
@@ -49,7 +42,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-<<<<<<< HEAD
 // app.use(
 //   cors({
 //     credentials: true,
@@ -57,9 +49,6 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 //   })
 // );
-=======
-
->>>>>>> 2c8d1640395eb02a0f722982f6fe8f9712139938
 
 mongoose
   .connect(process.env.MONGO_URL)
