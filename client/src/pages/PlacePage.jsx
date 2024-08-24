@@ -12,12 +12,29 @@ export default function PlacePage() {
     if (!id) {
       return;
     }
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/${id}`).then((response) => {
-      setPlace(response.data);
-    });
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/places/${id}`)
+      .then((response) => {
+        setPlace(response.data);
+      });
   }, [id]);
 
   if (!place) return "";
+
+  const renderExtraInfo = () => {
+    const lines = place.extraInfo
+      .split("\n")
+      .filter((line) => line.trim() !== "");
+    return (
+      <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
+        {lines.map((line, index) => (
+          <li key={index} style={{ marginBottom: "10px" }}>
+            {line}
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
@@ -42,10 +59,10 @@ export default function PlacePage() {
       </div>
       <div className="bg-white -mx-8 px-8 py-8 border-t">
         <div>
-          <h2 className="font-semibold text-2xl">Extra info</h2>
+          <h2 className="font-semibold text-2xl">Extra Info / House Rules</h2>
         </div>
         <div className="mb-4 mt-2 text-sm text-gray-700 leading-5">
-          {place.extraInfo}
+          {renderExtraInfo()}
         </div>
       </div>
     </div>

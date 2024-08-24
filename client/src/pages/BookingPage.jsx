@@ -1,26 +1,28 @@
-import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AddressLink from "../AddressLink";
 import PlaceGallery from "../PlaceGallery";
 import BookingDates from "../BookingDates";
 
 export default function BookingPage() {
-  const {id} = useParams();
-  const [booking,setBooking] = useState(null);
+  const { id } = useParams();
+  const [booking, setBooking] = useState(null);
   useEffect(() => {
     if (id) {
-      axios.get(`${import.meta.env.VITE_API_BASE_URL}/bookings`).then(response => {
-        const foundBooking = response.data.find(({_id}) => _id === id);
-        if (foundBooking) {
-          setBooking(foundBooking);
-        }
-      });
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/bookings`)
+        .then((response) => {
+          const foundBooking = response.data.find(({ _id }) => _id === id);
+          if (foundBooking) {
+            setBooking(foundBooking);
+          }
+        });
     }
   }, [id]);
 
   if (!booking) {
-    return '';
+    return "";
   }
 
   return (
@@ -34,7 +36,7 @@ export default function BookingPage() {
         </div>
         <div className="bg-primary p-6 text-white rounded-2xl">
           <div>Total price</div>
-          <div className="text-3xl">${booking.price}</div>
+          <div className="text-3xl">₹{booking.price}</div>
         </div>
       </div>
       <PlaceGallery place={booking.place} />
