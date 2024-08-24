@@ -80,7 +80,7 @@ export default function PlacesFormPage() {
     } else {
       // new place
       await axios.post(
-        `hotel-mingle-api.vercel.app/places`,
+        `${import.meta.env.VITE_API_BASE_URL}/places`,
         placeData
       );
       setRedirect(true);
@@ -90,6 +90,19 @@ export default function PlacesFormPage() {
   if (redirect) {
     return <Navigate to={"/account/places"} />;
   }
+
+  const renderExtraInfo = () => {
+    const lines = extraInfo.split("\n").filter((line) => line.trim() !== "");
+    return (
+      <ul style={{ paddingLeft: "20px", listStyleType: "disc" }}>
+        {lines.map((line, index) => (
+          <li key={index} style={{ marginBottom: "10px" }}>
+            {line}
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <div>
@@ -144,6 +157,11 @@ export default function PlacesFormPage() {
             }}
             placeholder="Provide additional information here..."
           />
+        </div>
+
+        <div style={{ marginTop: "20px" }}>
+          <h3>Preview of Extra Info</h3>
+          {renderExtraInfo()}
         </div>
 
         {preInput(
