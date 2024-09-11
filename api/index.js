@@ -12,6 +12,7 @@ require("dotenv").config();
 const multer = require("multer");
 const imageDownloader = require("image-downloader");
 const fs = require("fs");
+const path = require("path");
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
