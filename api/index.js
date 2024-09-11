@@ -156,89 +156,97 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   res.json(uploadedFiles);
 });
 
-app.post("/places", (req, res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const { token } = req.cookies;
-  const {
-    title,
-    address,
-    addedPhotos,
-    description,
-    price,
-    perks,
-    extraInfo,
-    checkIn,
-    checkOut,
-    maxGuests,
-  } = req.body;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const placeDoc = await Place.create({
-      owner: userData.id,
-      price,
-      title,
-      address,
-      photos: addedPhotos,
-      description,
-      perks,
-      extraInfo,
-      checkIn,
-      checkOut,
-      maxGuests,
-    });
-    res.json(placeDoc);
-  });
-});
-
 app.get("/user-places", (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({ error: "Token is missing" });
+  }
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
     const { id } = userData;
-    res.json(await Place.find({ owner: id }));
+    if (!id) {
+      return res.status(401).json({ error: "User ID is missing in token" });
+    }
+
+    try {
+      const places = await Place.find({ owner: id });
+      res.json(places);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch user places" });
+    }
   });
 });
 
 app.get("/places/:id", async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { id } = req.params;
-  res.json(await Place.findById(id));
+  try {
+    const place = await Place.findById(id);
+    res.json(place);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch place" });
+  }
 });
 
 app.put("/places", async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const { token } = req.cookies;
-  const {
-    id,
-    title,
-    address,
-    addedPhotos,
-    description,
-    perks,
-    extraInfo,
-    checkIn,
-    checkOut,
-    maxGuests,
-    price,
-  } = req.body;
+
+  if (!token) {
+    return res.status(401).json({ error: "Token is missing" });
+  }
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    if (err) throw err;
-    const placeDoc = await Place.findById(id);
-    if (userData.id === placeDoc.owner.toString()) {
-      placeDoc.set({
+    if (err) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    const { id } = userData;
+    if (!id) {
+      return res.status(401).json({ error: "User ID is missing in token" });
+    }
+
+    const {
+      id: placeId,
+      title,
+      address,
+      photos,
+      description,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      maxGuests,
+    } = req.body;
+
+    try {
+      const place = await Place.findById(placeId);
+      if (place.owner.toString() !== id) {
+        return res.status(403).json({ error: "You are not authorized to update this place" });
+      }
+
+      place.set({
         title,
         address,
-        photos: addedPhotos,
+        photos,
         description,
         perks,
         extraInfo,
         checkIn,
         checkOut,
         maxGuests,
-        price,
       });
-      await placeDoc.save();
-      res.json("ok");
+
+      await place.save();
+      res.json(place);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update place" });
     }
   });
 });
