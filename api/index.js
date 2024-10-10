@@ -18,6 +18,8 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
+const root = path.join(__dirname, "dist");
+
 // Use CORS middleware
 app.use(
   cors({
@@ -26,6 +28,8 @@ app.use(
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
+
+app.use(express.static(root));
 
 app.get("/", async (req, res, next) => {
   try {
