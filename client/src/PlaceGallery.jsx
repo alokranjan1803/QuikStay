@@ -12,7 +12,7 @@ export default function PlaceGallery({ place }) {
             <h2 className="text-3xl mr-48">Photos of {place.title}</h2>
             <button
               onClick={() => setShowAllPhotos(false)}
-              className="fixed right-12 top-8 flex gap-1 py-2 px-4 rounded-2xl shadow shadow-black bg-white text-black"
+              className="fixed right-12 top-8 flex gap-1 py-2 px-4 rounded-2xl shadow shadow-black bg-white text-black hover:bg-gray-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -29,12 +29,17 @@ export default function PlaceGallery({ place }) {
               Close photos
             </button>
           </div>
-          {place?.photos?.length > 0 &&
-            place.photos.map((photo, index) => (
-              <div key={index} className="flex justify-center">
-                <Image src={photo} alt="" />
-              </div>
-            ))}
+          <div className="grid grid-cols-1 gap-4">
+            {place?.photos?.length > 0 &&
+              place.photos.map((photo, index) => (
+                <div
+                  key={index}
+                  className="flex justify-center items-center overflow-hidden rounded-lg"
+                >
+                  <Image src={photo} alt="" className="object-cover" />
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     );
@@ -42,33 +47,33 @@ export default function PlaceGallery({ place }) {
 
   return (
     <div className="relative">
-      <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-3xl overflow-hidden">
-        <div>
+      <div className="grid grid-cols-[2fr_1fr] gap-4 rounded-3xl overflow-hidden">
+        <div className="relative overflow-hidden">
           {place.photos?.[0] && (
-            <div>
-              <Image
-                onClick={() => setShowAllPhotos(true)}
-                className="aspect-square cursor-pointer object-cover"
-                src={place.photos[0]}
-                alt=""
-              />
-            </div>
-          )}
-        </div>
-        <div className="grid">
-          {place.photos?.[1] && (
             <Image
               onClick={() => setShowAllPhotos(true)}
-              className="aspect-square cursor-pointer object-cover"
-              src={place.photos[1]}
+              className="cursor-pointer object-cover w-full h-full hover:scale-105 transition-transform"
+              src={place.photos[0]}
               alt=""
             />
           )}
-          <div className="overflow-hidden">
+        </div>
+        <div className="grid grid-rows-2 gap-2">
+          <div className="relative overflow-hidden">
+            {place.photos?.[1] && (
+              <Image
+                onClick={() => setShowAllPhotos(true)}
+                className="cursor-pointer object-cover w-full h-full hover:scale-105 transition-transform"
+                src={place.photos[1]}
+                alt=""
+              />
+            )}
+          </div>
+          <div className="relative overflow-hidden">
             {place.photos?.[2] && (
               <Image
                 onClick={() => setShowAllPhotos(true)}
-                className="aspect-square cursor-pointer object-cover relative top-2"
+                className="cursor-pointer object-cover w-full h-full hover:scale-105 transition-transform"
                 src={place.photos[2]}
                 alt=""
               />
@@ -78,7 +83,7 @@ export default function PlaceGallery({ place }) {
       </div>
       <button
         onClick={() => setShowAllPhotos(true)}
-        className="flex gap-1 absolute bottom-2 right-2 py-2 px-4 bg-white rounded-2xl shadow shadow-gray-500"
+        className="absolute bottom-4 right-4 py-2 px-4 bg-white rounded-2xl shadow-lg shadow-gray-500 flex gap-2 items-center hover:bg-gray-100 transition duration-300"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -41,9 +41,7 @@ export default function BookingWidget({ place }) {
       }
     );
     const bookingId = response.data._id;
-    setRedirect(
-      `${import.meta.env.VITE_API_BASE_URL}/account/bookings/${bookingId}`
-    );
+    setRedirect(`/account/bookings/${bookingId}`);
   }
 
   if (redirect) {

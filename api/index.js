@@ -12,6 +12,7 @@ require("dotenv").config();
 const multer = require("multer");
 const imageDownloader = require("image-downloader");
 const fs = require("fs");
+const path = require("path");
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
@@ -21,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: "https://hotel-mingle-client.vercel.app",
+    origin: process.env.CLIENT_API,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
@@ -87,27 +88,43 @@ app.post("/register", async (req, res) => {
 //login Route
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
+
+  // Check if both email and password are provided
+  if (!email || !password) {
+    return res.status(400).json("Email and password are required.");
+  }
+
+  // Find user by email
   const userDoc = await User.findOne({ email });
-  if (userDoc) {
-    const passOk = bcrypt.compareSync(password, userDoc.password);
-    if (passOk) {
-      jwt.sign(
-        {
-          email: userDoc.email,
-          id: userDoc._id,
-        },
-        jwtSecret,
-        {},
-        (err, token) => {
-          if (err) throw err;
-          res.cookie("token", token).json(userDoc);
+  if (!userDoc) {
+    // If user does not exist, return an error
+    return res.status(404).json("User not found.");
+  }
+
+  // Compare the provided password with the hashed password in the database
+  const passOk = bcrypt.compareSync(password, userDoc.password);
+  if (passOk) {
+    // If the password is correct, create and send the JWT token
+    jwt.sign(
+      {
+        email: userDoc.email,
+        id: userDoc._id,
+      },
+      jwtSecret,
+      {},
+      (err, token) => {
+        if (err) {
+          return res
+            .status(500)
+            .json("An error occurred while generating the token.");
         }
-      );
-    } else {
-      res.status(422).json("Incorrect Password");
-    }
+        // Set the token in a cookie and return user details
+        res.cookie("token", token).json(userDoc);
+      }
+    );
   } else {
-    return res.json("not found");
+    // If the password is incorrect, return an error
+    return res.status(422).json("Incorrect password.");
   }
 });
 

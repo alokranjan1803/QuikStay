@@ -11,6 +11,8 @@
   "author": "Alok Ranjan",
   "license": "ISC",
   "dependencies": {
+    "@rive-app/canvas": "^2.21.5",
+    "@rive-app/react-canvas": "^4.14.4",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
