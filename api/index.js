@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: process.env.CLIENT_API,
+    origin: "https://hotel-mingle-client.vercel.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
