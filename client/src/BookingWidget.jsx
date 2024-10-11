@@ -41,13 +41,7 @@ export default function BookingWidget({ place }) {
       }
     );
     const bookingId = response.data._id;
-<<<<<<< HEAD
     setRedirect(`/account/bookings/${bookingId}`);
-=======
-    setRedirect(
-      `/account/bookings/${bookingId}`
-    );
->>>>>>> 0b2930379b9f4fb7c8367e5ebeae9b0323d24ee9
   }
 
   if (redirect) {

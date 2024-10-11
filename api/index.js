@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+
 const User = require("./models/User.js");
 const Place = require("./models/Place.js");
 const Booking = require("./models/Booking.js");
@@ -14,22 +14,27 @@ const imageDownloader = require("image-downloader");
 const fs = require("fs");
 const path = require("path");
 
+const app = express();
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 5000;
 
+// const _dirname = path.resolve();
+
 const root = path.join(__dirname, "dist");
 
-// Use CORS middleware
+//Use CORS middleware
 app.use(
   cors({
     credentials: true,
-    origin: "https://hotel-mingle-client.vercel.app",
+    origin: process.env.CLIENT_API,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 
-app.use(express.static(root));
+app.use(express.json());
+app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 app.get("/", async (req, res, next) => {
   try {
@@ -43,10 +48,6 @@ app.get("/", async (req, res, next) => {
     return next(e);
   }
 });
-
-app.use(express.json());
-app.use(cookieParser());
-app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -283,7 +284,9 @@ app.put("/places", async (req, res) => {
     try {
       const place = await Place.findById(placeId);
       if (place.owner.toString() !== id) {
-        return res.status(403).json({ error: "You are not authorized to update this place" });
+        return res
+          .status(403)
+          .json({ error: "You are not authorized to update this place" });
       }
 
       place.set({
@@ -338,6 +341,11 @@ app.get("/bookings", async (req, res) => {
   mongoose.connect(process.env.MONGO_URL);
   const userData = await getUserDataFromReq(req);
   res.json(await Booking.find({ user: userData.id }).populate("place"));
+});
+
+app.use(express.static(path.join(__dirname, "/client/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
 });
 
 app.listen(PORT, "0.0.0.0", () => {
